@@ -43,12 +43,13 @@ const reactConfig = {
         id: happyLoaderId
       },
       include: babelLoader.include
-    }, new HappyPack({
-      id: happyLoaderId,
-      threadPool: happyThreadPool,
-      loaders: [happyLoaderId]
-    })]
-  }
+    }]
+  },
+  plugins: [new HappyPack({
+    id: happyLoaderId,
+    threadPool: happyThreadPool,
+    loaders: [babelLoader]
+  })]
 }
 
 delete babelLoader.test;

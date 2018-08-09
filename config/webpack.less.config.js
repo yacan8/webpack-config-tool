@@ -5,7 +5,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HappyPack = require('happypack');
 const os = require('os');
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
-const happyLoaderId = 'happypack-for-react-babel-loader';
 
 const isDebug = process.env.NODE_ENV !== 'production';
 
@@ -47,39 +46,64 @@ const lessConfig = {
   module: {
     rules: []
   },
-  plugins: []
+  plugins: [],
+  optimization: {
+    minimizer: [new OptimizeCssAssetsPlugin({
+      cssProcessor: require('cssnano'),
+      cssProcessorOptions: { discardComments: { removeAll: true } },
+      canPrint: true
+    })]
+  }
 };
 
 const lessHappyLoaderId = 'happypack-for-less-loader';
 const cssHappyLoaderId = 'happypack-for-css-loader';
 
 let loaders = [];
+let plugins = [];
 
 if (isDebug) {
-  loaders = [new HappyPack({
-    id: lessHappyLoaderId,
-    threadPool: happyThreadPool,
-    loaders: ['style-loader', cssLoader, postcssLoader, lessLoader ]
-  }), {
+  loaders = [{
     test: /\.less$/,
     loader: 'happypack/loader',
     query: {id: lessHappyLoaderId}
-  }, new HappyPack({
-    id: cssHappyLoaderId,
-    threadPool: happyThreadPool,
-    loaders: ['style-loader', cssLoader, postcssLoader ]
-  }), {
+  }, {
     test: /\.css$/,
     loader: 'happypack/loader',
     query: {id: cssHappyLoaderId}
   }]
+
+  plugins = [new HappyPack({
+    id: lessHappyLoaderId,
+    threadPool: happyThreadPool,
+    loaders: ['style-loader', cssLoader, postcssLoader, lessLoader ]
+  }),  new HappyPack({
+    id: cssHappyLoaderId,
+    threadPool: happyThreadPool,
+    loaders: ['style-loader', cssLoader, postcssLoader ]
+  })]
+
+
 } else {
-  lessConfig.plugins.push(new MiniCssExtractPlugin({
+
+  loaders = [{
+    test: /\.less$/,
+    use: [MiniCssExtractPlugin.loader, {
+      loader: 'happypack/loader',
+      query: {id: lessHappyLoaderId}
+    }]
+  }, {
+    test: /\.css/,
+    use: [MiniCssExtractPlugin.loader, {
+      loader: 'happypack/loader',
+      query: {id: cssHappyLoaderId}
+    }]
+  }]
+
+  plugins = [new MiniCssExtractPlugin({
     filename: '[name].css',
     // chunkFilename: "[id].css"
-  }))
-
-  loaders = [new HappyPack({
+  }), new HappyPack({
     id: lessHappyLoaderId,
     loaders: [
       cssLoader,
@@ -87,28 +111,17 @@ if (isDebug) {
       lessLoader
     ],
     threadPool: happyThreadPool
-  }), {
-    test: /\.less$/,
-    use: [MiniCssExtractPlugin.loader, {
-      loader: 'happypack/loader',
-      query: {id: lessHappyLoaderId}
-    }]
-  }, new HappyPack({
+  }), new HappyPack({
     id: cssHappyLoaderId,
     loaders: [
       cssLoader,
       postcssLoader
     ],
     threadPool: happyThreadPool
-  }), {
-    test: /\.css/,
-    use: [MiniCssExtractPlugin.loader, {
-      loader: 'happypack/loader',
-      query: {id: cssHappyLoaderId}
-    }]
-  }]
+  })]
 }
 
 lessConfig.module.rules.push(...loaders);
+lessConfig.plugins.push(...plugins);
 
 module.exports = lessConfig;

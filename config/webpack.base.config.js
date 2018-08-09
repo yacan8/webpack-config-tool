@@ -1,37 +1,21 @@
 const path = require('path');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const isDebug = process.env.NODE_ENV !== 'production';
 
-export function getUglifyJs (sourceMap) {
-  const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-  return new UglifyJsPlugin({
-    cache: true,
-    parallel: true,
-    sourceMap: sourceMap,
-    uglifyOptions: {
-      comments: false,
-      warnings: false,
-      compress: {
-        unused: true,
-        dead_code: true,
-        collapse_vars: true,
-        reduce_vars: true
-      },
-      output: {
-        comments: false
-      }
-    }
-  });
-};
-
 const base = {
-  entry: ['babel-polyfill', 'src/index'],
+  entry: ['babel-polyfill', path.join(process.cwd(), 'src/index')],
+  mode: JSON.stringify(process.env.NODE_ENV),
   output: {
     publicPath: '/',
     path: path.resolve(__dirname, '../dist')
   },
-  extensions: [".js", ".json"],
+  resolve: {
+    extensions: [".js", ".json"],
+  },
   module: {
     rules: [{
       test: /\.(png|jpg|jpeg|gif|svg)(\?v=\d+\.\d+\.\d+)?$/i, // 图片加载
@@ -43,7 +27,24 @@ const base = {
   },
   optimization: {
     minimize: isDebug,
-    minimizer: !isDebug ? [getUglifyJs(isDebug)] : [],
+    minimizer: !isDebug ? [new UglifyJsPlugin({
+      cache: true,
+      parallel: true,
+      sourceMap: true,
+      uglifyOptions: {
+        comments: false,
+        warnings: false,
+        compress: {
+          unused: true,
+          dead_code: true,
+          collapse_vars: true,
+          reduce_vars: true
+        },
+        output: {
+          comments: false
+        }
+      }
+    })] : [],
     splitChunks: {
       chunks: 'all'
     }
