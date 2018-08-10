@@ -22,14 +22,8 @@ const cssLoader = {
 const postcssLoader = {
   loader: 'postcss-loader',
   options: {
-    plugins: () => {
-      return [
-        require('postcss-nested')(),
-        require('pixrem')(),
-        require('autoprefixer')({browsers: ['last 2 versions', 'Firefox ESR', '> 1%', 'ie >= 8']}),
-        require('postcss-flexibility')(),
-        require('postcss-discard-duplicates')()
-      ]
+    config: {
+      path: __dirname
     }
   }
 }

@@ -20,7 +20,6 @@ const babelLoader = {
         'env',
         {
           targets: {
-            node: 'current',
             browsers: ["last 2 versions", "safari >= 7", "ie >= 9", 'chrome >= 52']
           },
           useBuiltIns: true,
@@ -29,11 +28,15 @@ const babelLoader = {
       ]
     ],
     plugins: [
-      'transform-decorators-legacy'
+      'transform-decorators-legacy',
+      'transform-class-properties',
+      ['import', { libraryName: "antd", style: true }]
     ]
   }
 }
-
+if (isDebug) {
+  babelLoader.query.presets = ['react-hmre'].concat(babelLoader.query.presets)
+}
 const reactConfig = {
   module: {
     rules: [{
@@ -54,9 +57,5 @@ const reactConfig = {
 
 delete babelLoader.test;
 delete babelLoader.include;
-
-if (isDebug) {
-  babelLoader.query.presets = ['react-hmre'].concat(babelLoader.query.presets)
-}
 
 module.exports = reactConfig;

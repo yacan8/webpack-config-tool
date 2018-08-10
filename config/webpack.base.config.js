@@ -5,13 +5,25 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const isDebug = process.env.NODE_ENV !== 'production';
-
+const host = 'localhost';
+const port = '8080';
 const base = {
-  entry: ['babel-polyfill', path.join(process.cwd(), 'src/index')],
-  mode: JSON.stringify(process.env.NODE_ENV),
+  entry: [path.join(process.cwd(), 'src/index')],
+  mode: isDebug ? 'development' : 'production',
   output: {
     publicPath: '/',
     path: path.resolve(__dirname, '../dist')
+  },
+  devServer: {
+    hot: true,
+    compress: false,
+    historyApiFallback: true,
+    host: host,
+    port: port,
+    disableHostCheck: true,
+    stats: { colors: true },
+    filename: '[name].chunk.js',
+    headers: { 'Access-Control-Allow-Origin': '*' }
   },
   resolve: {
     extensions: [".js", ".json"],
@@ -26,7 +38,7 @@ const base = {
     }]
   },
   optimization: {
-    minimize: isDebug,
+    minimize: !isDebug,
     minimizer: !isDebug ? [new UglifyJsPlugin({
       cache: true,
       parallel: true,
@@ -74,8 +86,11 @@ const base = {
 };
 
 if (isDebug) {
+  base.entry.unshift(`webpack-dev-server/client?http://${host}:${port}`, 'webpack/hot/dev-server');
+  base.plugins.unshift(new webpack.HotModuleReplacementPlugin());
   base.devtool = 'source-map';
+} else {
+  base.entry.unshift('babel-polyfill');
 }
-
 
 module.exports = base;
