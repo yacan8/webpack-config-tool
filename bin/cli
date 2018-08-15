@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+var program = require('commander')
+var version = require('../package').version
+var init = require('../install');
+program
+  .version(version, '-v, --version');
+
+program
+  .command('init')
+  .action(function(options) {
+    init(options);
+  });
+
+program.parse(process.argv);
