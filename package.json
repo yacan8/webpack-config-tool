@@ -1,13 +1,10 @@
 {
   "name": "webpack-config-tool",
-  "version": "1.0.0-bate.2",
+  "version": "1.0.0",
   "description": "Quick configure webpack of tool",
   "main": "index.js",
   "bin": {
     "wct": "./bin/cli"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
