@@ -1,6 +1,6 @@
 {
   "name": "webpack-config-tool",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Quick configure webpack of tool",
   "main": "index.js",
   "bin": {
@@ -29,9 +29,7 @@
     "gulp-util": "^3.0.8",
     "ora": "^3.0.0",
     "pretty-hrtime": "^1.0.3",
-    "yarn-install": "^1.0.0"
-  },
-  "devDependencies": {
+    "yarn-install": "^1.0.0",
     "lodash": "^4.17.10",
     "npm-install-package": "^2.1.0"
   }
