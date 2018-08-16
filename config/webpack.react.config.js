@@ -29,8 +29,7 @@ const babelLoader = {
     ],
     plugins: [
       'transform-decorators-legacy',
-      'transform-class-properties',
-      ['import', { libraryName: "antd", style: true }]
+      'transform-class-properties'
     ]
   }
 }
