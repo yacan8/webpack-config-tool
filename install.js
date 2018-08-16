@@ -1,42 +1,28 @@
-const Liftoff = require('liftoff');
-const gutil = require('gulp-util');
-const chalk = require('chalk');
-const globalModules = require('global-modules');
-const path = require('path');
-const prettyTime = require('pretty-hrtime');
-const generator = 'webpack-config-tool';
+var gutil = require('gulp-util');
+var chalk = require('chalk');
+var path = require('path');
+var prettyTime = require('pretty-hrtime');
+var generator = 'webpack-config-tool';
 
-function handleArguments(env) {
+var gulpModulePath = path.resolve(__dirname, './node_modules/gulp/index.js');
+var configPath = path.resolve(__dirname, './slushfile.js');
+var toRun = ['copy files', 'merge package'];
 
-  var argv = env.argv;
-  // var tasksFlag = argv.T || argv.tasks;
-  // var tasks = argv._;
-  var toRun = ['default'];
-  var args = [];
-
-  if (!env.modulePath) {
-    gutil.log(chalk.red('No local gulp install found in'), chalk.magenta(generator));
-    process.exit(1);
-  }
-
-  require(env.configPath);
-  console.info('Using slushfile', chalk.magenta(env.configPath));
-
-  var gulpInst = require(env.modulePath);
-  gulpInst.args = args;
+module.exports = function install() {
+  require(configPath);
+  console.info('Using slushfile', chalk.magenta(configPath));
+  var gulpInst = require(gulpModulePath);
   logEvents(generator, gulpInst);
-
-  if (process.cwd() !== env.cwd) {
-    process.chdir(env.cwd);
-    gutil.log('Working directory changed to', chalk.magenta(env.cwd));
-  }
-
   process.nextTick(function() {
-    // if (tasksFlag) {
-    //   return logTasks(generator.name, gulpInst);
-    // }
     gulpInst.start.apply(gulpInst, toRun);
   });
+}
+
+// format orchestrator errors
+function formatError(e) {
+  if (!e.err) return e.message;
+  if (e.err.message) return e.err.message;
+  return JSON.stringify(e.err);
 }
 
 // wire up logging events
@@ -57,7 +43,7 @@ function logEvents(name, gulpInst) {
   });
 
   gulpInst.on('task_not_found', function(err) {
-    console.info(chalk.red("Task '" + err.task + "' was not defined in `slush-" + name + "` but you tried to run it."));
+    console.info(chalk.red("Task '" + err.task + "' was not defined in `" + name + "` but you tried to run it."));
     process.exit(1);
   });
 
@@ -65,30 +51,3 @@ function logEvents(name, gulpInst) {
     console.info('Scaffolding done');
   });
 }
-
-function install() {
-  return new Promise((resolve, reject) => {
-    var argv = {};
-    argv.cwd = process.cwd();
-    argv._ = [];
-
-    var cli = new Liftoff({
-      processTitle: 'slush',
-      moduleName: 'gulp',
-      configName: 'slushfile'
-      // completions: require('../lib/completion') FIXME
-    });
-
-    cli.on('require', function(name) {
-      gutil.log('Requiring external module', chalk.magenta(name));
-    });
-
-    cli.on('requireFail', function(name) {
-      gutil.log(chalk.red('Failed to load external module'), chalk.magenta(name));
-    });
-
-    cli.launch(argv, handleArguments);
-  })
-}
-// install();
-module.exports = install;
