@@ -1,10 +1,10 @@
-const path = require('path');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
 const HappyPack = require('happypack');
 const os = require('os');
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+const lessHappyLoaderId = 'happypack-for-less-loader';
+const cssHappyLoaderId = 'happypack-for-css-loader';
 
 const isDebug = process.env.NODE_ENV !== 'production';
 
@@ -50,9 +50,6 @@ const lessConfig = {
   }
 };
 
-const lessHappyLoaderId = 'happypack-for-less-loader';
-const cssHappyLoaderId = 'happypack-for-css-loader';
-
 let loaders = [];
 let plugins = [];
 
@@ -76,7 +73,6 @@ if (isDebug) {
     threadPool: happyThreadPool,
     loaders: ['style-loader', cssLoader, postcssLoader ]
   })]
-
 
 } else {
 
@@ -115,7 +111,7 @@ if (isDebug) {
   })]
 }
 
-lessConfig.module.rules.push(...loaders);
-lessConfig.plugins.push(...plugins);
+lessConfig.module.rules = lessConfig.module.rules.concat(loaders);
+lessConfig.plugins = lessConfig.plugins.concat(plugins);
 
 module.exports = lessConfig;

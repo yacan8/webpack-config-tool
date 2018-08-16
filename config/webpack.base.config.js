@@ -18,6 +18,7 @@ const base = {
     hot: true,
     compress: false,
     historyApiFallback: true,
+    open: true,
     host: host,
     port: port,
     disableHostCheck: true,
@@ -82,7 +83,19 @@ const base = {
       filename: 'index.html',
       template: path.resolve(__dirname, '../index.html')
     })
-  ]
+  ],
+  stats: {  // 打印信息控制
+    all: undefined,
+    timings: true,
+    publicPath: true,
+    assets: true,
+    entrypoints: true,
+    modules: false,
+    chunks: true,
+    chunkGroups: true,
+    chunkModules: false,
+    children: false
+  },
 };
 
 if (isDebug) {

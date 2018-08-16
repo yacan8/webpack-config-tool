@@ -33,8 +33,8 @@ gulp.task('copy files', function (done) {
   Promise.all([
     copyTask([__dirname + '/config/**', '!' + __dirname + '/config/package.json', '!' + __dirname + '/config/node_modules/**'], './build/')
   ]).then(function() { 
-    const dependencies = Object.keys(configPkg.dependencies).map(function(_module) {
-      return _module + '@' + configPkg.dependencies[_module];
+    const dependencies = Object.keys(configPkg.devDependencies).map(function(_module) {
+      return _module + '@' + configPkg.devDependencies[_module];
     });
     if (exists('yarn')) {
       yarnInstall({
