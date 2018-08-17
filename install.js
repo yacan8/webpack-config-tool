@@ -6,7 +6,7 @@ var generator = 'webpack-config-tool';
 
 var gulpModulePath = path.resolve(__dirname, './node_modules/gulp/index.js');
 var configPath = path.resolve(__dirname, './slushfile.js');
-var toRun = ['copy files', 'merge package'];
+var toRun = ['copy files'];
 
 module.exports = function install() {
   require(configPath);

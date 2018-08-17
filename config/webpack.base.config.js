@@ -3,18 +3,23 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const isDebug = process.env.NODE_ENV !== 'production';
 const host = 'localhost';
 const port = '8080';
+
+const releasePath = path.resolve(__dirname, '../dist');
 const base = {
   entry: [path.join(process.cwd(), 'src/index')],
   mode: isDebug ? 'development' : 'production',
   output: {
     publicPath: '/',
-    path: path.resolve(__dirname, '../dist')
+    path: releasePath,
+    chunkFilename: '[name].[chunkhash].chunk.js'
   },
   devServer: {
+    contentBase: [path.join(process.cwd(), './vendor-dev/'), path.join(process.cwd(), './vendor/')],
     hot: true,
     compress: false,
     historyApiFallback: true,
@@ -31,7 +36,7 @@ const base = {
   },
   module: {
     rules: [{
-      test: /\.(png|jpg|jpeg|gif|svg)(\?v=\d+\.\d+\.\d+)?$/i, // 图片加载
+      test: /\.(woff|woff2|ttf|eot|png|jpg|jpeg|gif|svg)(\?v=\d+\.\d+\.\d+)?$/i, // 图片加载
       loader: 'url-loader',
       query: {
         limit: 10000
@@ -81,7 +86,7 @@ const base = {
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: path.resolve(__dirname, '../index.html')
+      template: path.resolve(__dirname, './index.html')
     })
   ],
   stats: {  // 打印信息控制
@@ -104,6 +109,14 @@ if (isDebug) {
   base.devtool = 'source-map';
 } else {
   base.entry.unshift('babel-polyfill');
+  base.plugins.push(new CleanWebpackPlugin(
+    "*",
+    {
+      root: releasePath,                      //根目录
+      verbose: true,        　　　　　　　　　　//开启在控制台输出信息
+      dry: false        　　　　　　　　　　//启用删除文件
+    }
+  ))
 }
 
 module.exports = base;

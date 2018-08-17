@@ -14,8 +14,6 @@ const cssLoader = {
     sourceMap: isDebug,
     modules: true,
     localIdentName: '[local]',
-    minimize: !isDebug,
-    discardComments: { removeAll: true }
   }
 }
 
@@ -32,7 +30,7 @@ const lessLoader = {
   loader: 'less-loader',
   options: {
     sourceMap: isDebug,
-    javascriptEnabled: true
+    javascriptEnabled: true  // 支持内联JavaScript
   }
 }
 
@@ -42,10 +40,9 @@ const lessConfig = {
   },
   plugins: [],
   optimization: {
-    minimizer: [new OptimizeCssAssetsPlugin({
-      cssProcessor: require('cssnano'),
-      cssProcessorOptions: { discardComments: { removeAll: true } },
-      canPrint: true
+    minimizer: [new OptimizeCssAssetsPlugin({ // 使用 OptimizeCssAssetsPlugin 对css进行压缩
+      cssProcessor: require('cssnano'),   // css 压缩优化器
+      cssProcessorOptions: { discardComments: { removeAll: true } } // 去除所有注释
     })]
   }
 };
