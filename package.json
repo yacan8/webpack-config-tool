@@ -1,6 +1,6 @@
 {
   "name": "webpack-config-tool",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Quick configure webpack of tool",
   "main": "index.js",
   "bin": {
