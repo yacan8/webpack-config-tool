@@ -62,10 +62,7 @@ const base = {
           comments: false
         }
       }
-    })] : [],
-    splitChunks: {
-      chunks: 'all'
-    }
+    })] : []
   },
   plugins: [
     new ProgressBarPlugin(),
