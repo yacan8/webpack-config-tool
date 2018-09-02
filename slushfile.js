@@ -10,7 +10,9 @@ var gulp = require('gulp'),
   path = require('path'),
   exists = require('global-module-exists'),
   inquirer = require('inquirer');
-  
+
+var cfgPath = './webpack/';
+
 function copyTask(dir, to) {
   return new Promise(function(resolve) {
     gulp.src(dir)
@@ -45,9 +47,9 @@ gulp.task('copy files', function (done) {
     ];
     if (answers.dll) {
       defaultCopyFiles.push('!' + __dirname + '/config/webpack.config.js', '!' + __dirname + '/config/index.html'); // 使用dll的webpack.config.js;
-      tasks.push(copyTask([__dirname + '/dll/**', '!' + __dirname + '/**/package.json', '!' + __dirname + '/**/node_modules/**'], './build/'))
+      tasks.push(copyTask([__dirname + '/dll/**', '!' + __dirname + '/**/package.json', '!' + __dirname + '/**/node_modules/**'], cfgPath))
     }
-    tasks.push(copyTask(defaultCopyFiles, './build/'));
+    tasks.push(copyTask(defaultCopyFiles, cfgPath));
     
     Promise.all(tasks).then(() => {
       var configPkgPath = path.resolve(__dirname, './config/package.json');

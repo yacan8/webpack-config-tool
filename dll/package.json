@@ -5,13 +5,13 @@
   },
   "betterScripts": {
     "start:dll": {
-      "command": "webpack --config ./build/webpack.dll.config.js",
+      "command": "webpack --config ./webpack/webpack.dll.config.js",
       "env": {
         "NODE_ENV": "development"
       }
     },
     "build:dll": {
-      "command": "webpack --config ./build/webpack.dll.config.js",
+      "command": "webpack --config ./webpack/webpack.dll.config.js",
       "env": {
         "NODE_ENV": "production"
       }

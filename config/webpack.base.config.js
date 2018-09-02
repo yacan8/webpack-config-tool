@@ -7,9 +7,10 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const isDebug = process.env.NODE_ENV !== 'production';
 const host = 'localhost';
-const port = '8080';
+const port = 8080;
 
 const releasePath = path.resolve(__dirname, '../dist');
+
 const base = {
   entry: [path.join(process.cwd(), 'src/index')],
   mode: isDebug ? 'development' : 'production',
@@ -105,7 +106,6 @@ if (isDebug) {
   base.plugins.unshift(new webpack.HotModuleReplacementPlugin());
   base.devtool = 'source-map';
 } else {
-  base.entry.unshift('babel-polyfill');
   base.plugins.push(new CleanWebpackPlugin(
     "*",
     {
