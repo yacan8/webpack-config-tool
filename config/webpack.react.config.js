@@ -23,7 +23,8 @@ const babelLoader = {
             browsers: ["last 2 versions", "safari >= 7", "ie >= 9", 'chrome >= 52']
           },
           useBuiltIns: false,
-          debug: false
+          debug: false,
+          modules: false
         }
       ]
     ],
