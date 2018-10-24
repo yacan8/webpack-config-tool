@@ -1,20 +1,6 @@
 {
   "scripts": {
-    "start:dll": "better-npm-run start:dll",
-    "build:dll": "better-npm-run build:dll"
-  },
-  "betterScripts": {
-    "start:dll": {
-      "command": "webpack --config ./webpack/webpack.dll.config.js",
-      "env": {
-        "NODE_ENV": "development"
-      }
-    },
-    "build:dll": {
-      "command": "webpack --config ./webpack/webpack.dll.config.js",
-      "env": {
-        "NODE_ENV": "production"
-      }
-    }
+    "start:dll": "cross-env NODE_ENV=development webpack --config ./webpack/webpack.dll.config.js",
+    "build:dll": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.dll.config.js"
   }
 }

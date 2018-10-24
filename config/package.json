@@ -1,21 +1,7 @@
 {
   "scripts": {
-    "start": "better-npm-run start",
-    "build": "better-npm-run build"
-  },
-  "betterScripts": {
-    "start": {
-      "command": "webpack-dev-server --config ./webpack/webpack.config.js",
-      "env": {
-        "NODE_ENV": "development"
-      }
-    },
-    "build": {
-      "command": "webpack --config ./webpack/webpack.config.js",
-      "env": {
-        "NODE_ENV": "production"
-      }
-    }
+    "start": "cross-env NODE_ENV=development webpack-dev-server --config ./webpack/webpack.config.js",
+    "build": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.config.js"
   },
   "devDependencies": {
     "autoprefixer": "^9.1.0",
@@ -32,6 +18,7 @@
     "better-npm-run": "^0.1.1",
     "clean-webpack-plugin": "^0.1.17",
     "copy-webpack-plugin": "^4.2.3",
+    "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
     "cssnano": "^4.0.5",
     "file-loader": "^2.0.0",
